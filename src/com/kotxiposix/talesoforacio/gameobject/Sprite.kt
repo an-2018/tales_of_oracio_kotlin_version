@@ -17,6 +17,8 @@ class Sprite(image:Image) {
     }
 
     fun draw(g: Graphics, x:Int, y:Int){
+        println("img"+image)
         g.drawImage(image, x, y, null)
+        println("image draw")
     }
 }
