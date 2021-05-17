@@ -6,13 +6,12 @@ import java.awt.Toolkit
 import java.awt.image.BufferStrategy
 import java.awt.image.BufferedImage
 import java.io.IOException
-import java.net.URL
 import javax.imageio.ImageIO
 
 class Game: Canvas(), Runnable {
     private var running:Boolean = false
     private var delta:Long = 0
-    private var hero:Sprite? = null
+    public var hero:Sprite? = null
 
     override fun run() {
         var lastTime: Long = System.currentTimeMillis()
@@ -29,7 +28,6 @@ class Game: Canvas(), Runnable {
 
     fun init(){
         hero = getSprite("oracio.png")
-        hero!!.draw(g, 20, 20)
     }
 
     fun start(){
@@ -50,24 +48,29 @@ class Game: Canvas(), Runnable {
         gfx.fillRect(0,0, width, height)
         gfx.dispose()
         bs.show()
+
+        hero?.draw(gfx, 20, 20)
     }
 
     fun update(delta:Long){
 
     }
 
-    fun getSprite(path:String):Sprite{
-        var sourceImage:BufferedImage? = null
+    fun getSprite(path:String):Sprite?{
+        val sourceImage:BufferedImage
+        val sprite: Sprite
+        return try{
 
-        try{
-            val url: URL? = this.javaClass.classLoader.getResource(path)
+            val url = this.javaClass.classLoader.getResource(path)
+            println(url)
             sourceImage = ImageIO.read(url)
+
+            sprite = Sprite(Toolkit.getDefaultToolkit().createImage(sourceImage?.source))
+
+            sprite
         }catch (e:IOException){
             e.printStackTrace()
+            null;
         }
-
-        val sprite: Sprite = Sprite(Toolkit.getDefaultToolkit().createImage(sourceImage?.source))
-
-        return sprite
     }
 }
